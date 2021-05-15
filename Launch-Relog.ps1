@@ -1,20 +1,26 @@
 Function Update-CommandLine {
-    if ($wpf.txtOutputFolder.text -notmatch "\\$"){$wpf.txtOutputFolder.text = $wpf.txtOutputFolder.text + '\'}
-    $DateTimeTag = Get-Date -F ddMMyyyy_hhmmss
-    $strCommand = ('relog.exe ') + ($wpf.txtBLGFileName.text) + (' -f CSV -o ') + ('"') + $DateTimeTag + ('_') + ($wpf.txtOutputFolder.text) + ($wpf.txtOutputFileName.text) + ('"')
-    $global:CommandLineValid = $true
-    $wpf.txtCmd.Text = $strCommand
-
-    if (($global:CommandLineValid) -and ($global:ExecExist)){
-        $wpf.btnRun.IsEnabled = $true
-        $wpf.graphBusy.Visibility = "Hidden"
-        $wpf.graphReady.Visibility = "Visible"
-        $wpf.graphGrey.Visibility = "Hidden"
+    if ($wpf.txtBLGFileName.text -eq "Select File To Load")
+    {
+        $global:CommandLineValid = $false
     } Else {
-        $wpf.btnRun.IsEnabled = $false
-        $wpf.graphBusy.Visibility = "Hidden"
-        $wpf.graphReady.Visibility = "Hidden"
-        $wpf.graphGrey.Visibility = "Visible"
+        if ($wpf.txtOutputFolder.text -notmatch "\\$"){$wpf.txtOutputFolder.text = $wpf.txtOutputFolder.text + '\'}
+        $DateTimeTag = Get-Date -F ddMMyyyy_hhmmss
+        $wpf.lblOutputFileExtention.content = $DateTimeTag + ".CSV"
+        $strCommand = ('relog.exe ') + ('"') + ($wpf.txtBLGFileName.text) + ('"') + (' -f CSV -o ') + ('"') + ($wpf.txtOutputFolder.text) + ($wpf.txtOutputFileName.text) + ('_') + $DateTimeTag + ('.csv"')
+        $global:CommandLineValid = $true
+        $wpf.txtCmd.Text = $strCommand
+    
+        if (($global:CommandLineValid) -and ($global:ExecExist)){
+            $wpf.btnRun.IsEnabled = $true
+            $wpf.graphBusy.Visibility = "Hidden"
+            $wpf.graphReady.Visibility = "Visible"
+            $wpf.graphGrey.Visibility = "Hidden"
+        } Else {
+            $wpf.btnRun.IsEnabled = $false
+            $wpf.graphBusy.Visibility = "Hidden"
+            $wpf.graphReady.Visibility = "Hidden"
+            $wpf.graphGrey.Visibility = "Visible"
+        }
     }
 }
 
@@ -59,31 +65,28 @@ $inputXML = @"
         xmlns:local="clr-namespace:Launch_Y_CMD"
         mc:Ignorable="d"
         Title="Relog.exe command generator" Height="450" Width="800">
-    <Grid>
-        <Button x:Name="btnRun" Content="Relog !" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="10,216,0,0"/>
-        <TextBox x:Name="txtCmd" HorizontalAlignment="Left" Height="43" Margin="10,163,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="744" IsReadOnly="True" Background="Black" Foreground="Yellow"/>
-        <TextBox x:Name="txtExecLocation" HorizontalAlignment="Left" Height="49" Margin="326,291,0,0" TextWrapping="Wrap" Text="C:\Windows\System32" VerticalAlignment="Top" Width="294" IsReadOnly="True"/>
-        <Label x:Name="lbl3" Content="Location of relog.exe:" HorizontalAlignment="Left" Margin="326,260,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnCheckExec" Content="Check" HorizontalAlignment="Left" Margin="326,345,0,0" VerticalAlignment="Top" Width="75"/>
-        <Label x:Name="lblExecStatus" Content="Label" HorizontalAlignment="Left" Margin="326,370,0,0" VerticalAlignment="Top"/>
-        <Ellipse x:Name="graphReady" Fill="Green" HorizontalAlignment="Left" Height="100" Margin="87,265,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Visibility="Hidden"/>
-        <Ellipse x:Name="graphGrey" Fill="Gray" HorizontalAlignment="Left" Height="100" Margin="87,265,0,0" Stroke="Black" VerticalAlignment="Top" Width="100"/>
-        <Rectangle x:Name="graphBusy" Fill="Red" HorizontalAlignment="Left" Height="100" Margin="87,265,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Visibility="Hidden"/>
-        <TextBox x:Name="txtOutputFolder" HorizontalAlignment="Left" Height="23" Margin="124,122,0,0" TextWrapping="Wrap" Text="C:\temp" VerticalAlignment="Top" Width="496" IsReadOnly="True"/>
-        <Label x:Name="lbl2" Content="Output location" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top" Width="95"/>
-        <Button x:Name="btnLoadBLG" Content="Load BLG" HorizontalAlignment="Left" Margin="21,21,0,0" VerticalAlignment="Top" Width="84" Height="43"/>
-        <TextBox x:Name="txtBLGFileName" HorizontalAlignment="Center" Height="43" Margin="124,21,172,0" TextWrapping="Wrap" Text="Select File To Load" VerticalAlignment="Top" Width="496" VerticalContentAlignment="Center" Background="{x:Null}" IsReadOnly="True"/>
-        <Label x:Name="lbl1" Content="Output File Name" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" Height="27" Width="109"/>
-        <TextBox x:Name="txtOutputFileName" HorizontalAlignment="Left" Height="28" Margin="124,86,0,0" TextWrapping="Wrap" Text="Output File Name" VerticalAlignment="Top" Width="496" VerticalContentAlignment="Center"/>
-
-    </Grid>
+<Grid>
+    <Button x:Name="btnRun" Content="Relog !" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="10,216,0,0"/>
+    <TextBox x:Name="txtCmd" HorizontalAlignment="Left" Height="43" Margin="10,163,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="744" IsReadOnly="True" Background="Black" Foreground="Yellow"/>
+    <TextBox x:Name="txtExecLocation" HorizontalAlignment="Left" Height="49" Margin="326,291,0,0" TextWrapping="Wrap" Text="C:\Windows\System32" VerticalAlignment="Top" Width="294" IsReadOnly="True"/>
+    <Label x:Name="lbl3" Content="Location of relog.exe:" HorizontalAlignment="Left" Margin="326,260,0,0" VerticalAlignment="Top"/>
+    <Button x:Name="btnCheckExec" Content="Check" HorizontalAlignment="Left" Margin="326,345,0,0" VerticalAlignment="Top" Width="75"/>
+    <Label x:Name="lblExecStatus" Content="Label" HorizontalAlignment="Left" Margin="326,370,0,0" VerticalAlignment="Top"/>
+    <Ellipse x:Name="graphReady" Fill="Green" HorizontalAlignment="Left" Height="100" Margin="87,265,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Visibility="Hidden"/>
+    <Ellipse x:Name="graphGrey" Fill="Gray" HorizontalAlignment="Left" Height="100" Margin="87,265,0,0" Stroke="Black" VerticalAlignment="Top" Width="100"/>
+    <Rectangle x:Name="graphBusy" Fill="Red" HorizontalAlignment="Left" Height="100" Margin="87,265,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Visibility="Hidden"/>
+    <TextBox x:Name="txtOutputFolder" HorizontalAlignment="Left" Height="23" Margin="124,122,0,0" TextWrapping="Wrap" Text="C:\temp" VerticalAlignment="Top" Width="496" IsReadOnly="True"/>
+    <Label x:Name="lbl2" Content="Output location" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top" Width="95"/>
+    <Button x:Name="btnLoadBLG" Content="Load BLG" HorizontalAlignment="Left" Margin="21,21,0,0" VerticalAlignment="Top" Width="84" Height="43"/>
+    <TextBox x:Name="txtBLGFileName" HorizontalAlignment="Center" Height="43" Margin="124,21,172,0" TextWrapping="Wrap" Text="Select File To Load" VerticalAlignment="Top" Width="496" VerticalContentAlignment="Center" IsReadOnly="True"/>
+    <Label x:Name="lbl1" Content="Output File Name" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" Height="27" Width="109"/>
+    <TextBox x:Name="txtOutputFileName" HorizontalAlignment="Left" Height="28" Margin="124,86,0,0" TextWrapping="Wrap" Text="Output File Name" VerticalAlignment="Top" Width="202" VerticalContentAlignment="Center"/>
+    <Label x:Name="lblOutputFileExtention" Content=".CSV" HorizontalAlignment="Left" Margin="342,88,0,0" VerticalAlignment="Top"/>
+</Grid>
 </Window>
 "@
 
 $inputXMLClean = $inputXML -replace 'mc:Ignorable="d"','' -replace "x:N",'N' -replace 'x:Class=".*?"','' -replace 'd:DesignHeight="\d*?"','' -replace 'd:DesignWidth="\d*?"',''
-# cls
-# $inputXMLClean
-# exit
 [xml]$xaml = $inputXMLClean
 $reader = New-Object System.Xml.XmlNodeReader $xaml
 $tempform = [Windows.Markup.XamlReader]::Load($reader)
@@ -104,7 +107,6 @@ $wpf.$FormName.Add_Loaded({
 $wpf.$FormName.Add_ContentRendered({
     Update-CommandLine
     Check-Exec
-    write-host "DADSASD"
 })
 $wpf.$FormName.add_Closing({
     $msg = "bye bye !"
@@ -129,7 +131,9 @@ $wpf.btnRun.add_click({
         $wpf.graphGrey.Visibility = "Hidden"
         $wpf.$FormName.IsEnabled = $false
         $wpf.$FormName.Dispatcher.Invoke("Render",[action][scriptblock]{})
-        Invoke-Expression $CommandWithFullPath | out-host
+
+        Invoke-Expression "cmd /C $CommandWithFullPath"
+
         $wpf.$FormName.IsEnabled = $true
         $wpf.graphBusy.Visibility = "Hidden"
         $wpf.graphReady.Visibility = "Visible"
@@ -149,7 +153,8 @@ $wpf.btnLoadBLG.add_Click({
     #$OpenFileDialog.FileName = $wpf.txtBLGFileName.Text
     $OpenFileDialog.DefaultExt = ".blg"
     $OpenFileDialog.Filter = "blg files (.blg)|*.blg"
-    $OpenFileDialog.InitialDirectory = $PSScriptRoot
+    #$OpenFileDialog.InitialDirectory = $PSScriptRoot
+    $OpenFileDialog.InitialDirectory = "$($env:userprofile)\Documents"
     $Result = $OpenFileDialog.ShowDialog()
     if ($Result) {
         $FileName = $OpenFileDialog.FileName
